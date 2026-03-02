@@ -31,18 +31,19 @@ geo_cache = {}
 
 def get_gps(filepath):
     """Extract GPS coordinates from a file using exiftool.
-    Returns (latitude, longitude) tuple or None if no GPS data."""
+    Returns (latitude, longitude) tuple or None if no GPS data.
+    Uses GPSLatitude/Longitude in decimal degrees with ref direction."""
     result = subprocess.run(
-        ["exiftool", "-j", "-GPSLatitude", "-GPSLongitude", filepath],
+        ["exiftool", "-j", "-GPSLatitude#", "-GPSLongitude#", filepath],
         capture_output=True, text=True
     )
     try:
         data = json.loads(result.stdout)
         lat = data[0].get("GPSLatitude")
         lon = data[0].get("GPSLongitude")
-        if lat and lon:
-            return (lat, lon)
-    except (json.JSONDecodeError, IndexError, KeyError):
+        if lat is not None and lon is not None:
+            return (float(lat), float(lon))
+    except (json.JSONDecodeError, IndexError, KeyError, ValueError):
         pass
     return None
 
