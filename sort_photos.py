@@ -27,8 +27,7 @@ import json
 import shutil
 import logging
 import subprocess
-from datetime import datetime
-from collections import defaultdict
+
 
 # ---------------------------------------------------------------------------
 # Configuration
